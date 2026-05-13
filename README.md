@@ -26,15 +26,15 @@ Logging and Error Handling
 
 Open PowerShell:
 
-cd path\to\project
+`cd path\to\project`
 
 Run:
 
-.\monitor.ps1
+`.\monitor.ps1`
 
 If PowerShell blocks execution:
 
-Set-ExecutionPolicy -Scope Process Bypass
+`Set-ExecutionPolicy -Scope Process Bypass`
 
 # Structure
 windows-log-monitor/
