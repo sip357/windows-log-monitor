@@ -22,6 +22,19 @@ CSV Processing
 File System Operations
 Logging and Error Handling
 
+# Run the Script
+
+Open PowerShell:
+
+cd path\to\project
+
+Run:
+
+.\monitor.ps1
+
+If PowerShell blocks execution:
+
+Set-ExecutionPolicy -Scope Process Bypass
 
 # Structure
 windows-log-monitor/
