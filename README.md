@@ -3,11 +3,9 @@ Overview
 
 The Windows Log Monitor & Report Tool is a lightweight PowerShell automation project that monitors a Windows folder for incoming CSV files, validates operational data, logs errors, and simulates automated reporting.
 
-Validation Rule
-The script validates the Tonnes column in each CSV file.
+Validation Rule: The script validates the Tonnes column in each CSV file.
 
-Example Rule
-Tonnes value must not be negative
+Example Rule: Tonnes value must not be negative
 
 This project demonstrates:
 PowerShell scripting
