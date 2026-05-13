@@ -1,12 +1,29 @@
-# Folder to monitor
+#---------- Declarations / configurations
+# Watch folder for incoming CSV files, processed folder for moving validated files, and log file for recording validation errors
 $watchFolder = "C:\Logs\MineData"
-
-# Log file
-$logFile = "C:\Logs\MineData\validation_errors.log"
+$processedFolder = "$watchFolder\processed"
+$logFile = "$watchFolder\Validation_Errors.log"
+#---------- End of declarations
 
 # Create log file if it doesn't exist
 if (!(Test-Path $logFile)) {
     New-Item -Path $logFile -ItemType File
+}
+
+#Create processed folder if it doesn't exist
+if (!(Test-Path $processedFolder)) {
+    New-Item -Path $processedFolder -ItemType Directory
+}
+
+#------- Functions
+function write-log {
+    param (
+        [string]$message
+    )
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $timestampedMessage = "$timestamp - $message"
+    Add-Content -Path $logFile -Value $timestampedMessage
+    Write-Host $timestampedMessage
 }
 
 Write-Host "Starting CSV validation..."
@@ -23,7 +40,15 @@ try {
         # Import CSV
         $data = Import-Csv $file.FullName
 
+        # Validate that the 'Tonnes' column exists and is not empty
+        if(-not ($row.tonnes)) {
+            $errorMessage = "$(Get-Date) - ERROR in $($file.Name): Tonnes column is missing or empty."
+            write-log -message $errorMessage
+            continue
+        }
+
         foreach ($row in $data) {
+
 
             # Convert tonnes to number
             $tonnes = [int]$row.Tonnes
@@ -34,12 +59,10 @@ try {
                 $errorMessage = "$(Get-Date) - ERROR in $($file.Name): Negative tonnes value found ($tonnes)"
 
                 # Write to log
-                Add-Content -Path $logFile -Value $errorMessage
-
-                Write-Host $errorMessage
+                write-log -message $errorMessage
             }
         }
-        Move-Item $file.FullName "$watchFolder\processed\"
+        Move-Item $file.FullName "$processedFolder\"
     }
 
     Write-Host "Email would be sent if there were any validation errors. Check the log file for details."
@@ -49,7 +72,5 @@ catch {
 
     $crashMessage = "$(Get-Date) - SCRIPT FAILURE: $_"
 
-    Add-Content -Path $logFile -Value $crashMessage
-
-    Write-Host $crashMessage
+    write-log -message $crashMessage
 }
