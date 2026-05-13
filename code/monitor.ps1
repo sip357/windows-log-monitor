@@ -39,6 +39,7 @@ try {
                 Write-Host $errorMessage
             }
         }
+        Move-Item $file.FullName "$watchFolder\processed\"
     }
 
     Write-Host "Email would be sent if there were any validation errors. Check the log file for details."
